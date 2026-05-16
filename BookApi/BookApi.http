@@ -1,0 +1,13 @@
+@BookApi_HostAddress = https://localhost:7197
+
+
+POST {{BookApi_HostAddress}}/books
+Content-Type: application/json
+
+{
+  "title":"Wiedzmin",
+  "authorId": 1
+}
+
+###
+

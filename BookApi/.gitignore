@@ -1,0 +1,66 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build folders
+bin/
+obj/
+
+# Rider / JetBrains
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+!**/packages/build/
+
+# ASP.NET secrets / local config
+appsettings.Development.json
+secrets.json
+
+# Entity Framework
+*.dbmdl
+*.jfm
+
+# Generated files
+Generated_Code/
+
+# Publish output
+publish/
+wwwroot/dist/
+wwwroot/lib/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (if frontend in project)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv
+.env
+.env.*
+
+# Test results
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
