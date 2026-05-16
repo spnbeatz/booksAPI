@@ -6,8 +6,20 @@ Content-Type: application/json
 
 {
   "title":"Wiedzmin",
-  "authorId": 1
+  "year":2022,
+  "authorId": 4
 }
 
 ###
 
+POST {{BookApi_HostAddress}}/authors
+Content-Type: application/json
+
+{
+    "FirstName":"Janek",
+    "LastName":"Danonek"
+}
+
+###
+
+GET {{BookApi_HostAddress}}/authors

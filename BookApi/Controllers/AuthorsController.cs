@@ -55,44 +55,58 @@ namespace BookApi.Controllers
             _context.Author.Add(author);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEntry", new { id = author.Id }, author);
+            return CreatedAtAction(
+                nameof(GetAuthor),
+                new { id = author.Id },
+                new
+                {
+                    id = author.Id,
+                    first_name = author.FirstName,
+                    last_name = author.LastName
+                }
+            );
         }
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAuthor(int id, CreateAuthor input)
+        public async Task<IActionResult> PutAuthor(int id, CreateAuthor input)
         {
-            if (id != input.Id)
-            {
-                return BadRequest();
-            }
-
-            var author = new Author()
-            {
-                Id = id,
-                FirstName = input.FirstName,
-                LastName = input.LastName,
-            };
-
-            _context.Entry(author).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
+                Console.WriteLine($"dsaadad {id}");
+
+                Author author = new Author()
+                {
+                    Id = id,
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                };
+
+                _context.Entry(author).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AuthorExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return NoContent();
+            } catch(Exception error)
             {
-                if (!AuthorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                Console.WriteLine(error);
+                return NotFound();
             }
 
-            return NoContent();
 
         }
 

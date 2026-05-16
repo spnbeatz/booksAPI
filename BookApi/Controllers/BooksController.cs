@@ -46,34 +46,43 @@ namespace BookApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(CreateBook input)
         {
-            var book = new Book
+            try
             {
-                Title = input.Title,
-                Year = input.Year,
-                AuthorId = input.AuthorId,
-            };
+                var book = new Book
+                {
+                    Title = input.Title,
+                    Year = input.Year,
+                    AuthorId = input.AuthorId
+                };
 
-            _context.Book.Add(book);
-            await _context.SaveChangesAsync();
+                _context.Book.Add(book);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEntry", new { id = book.Id }, book);
+                return CreatedAtAction(
+                    nameof(GetBook),
+                    new { id = book.Id },
+                    new BookDTO(book)
+                );
+            } catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return BadRequest();
+            }
+
+
         }
 
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBook(int id, CreateBook input)
         {
-            if (id != input.Id)
-            {
-                return BadRequest();
-            }
 
-            var book = new Book()
+            var book = new Book
             {
                 Id = id,
                 Title = input.Title,
                 Year = input.Year,
-                AuthorId = input.AuthorId,
+                AuthorId = input.AuthorId
             };
 
             _context.Entry(book).State = EntityState.Modified;

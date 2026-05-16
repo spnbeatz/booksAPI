@@ -8,7 +8,7 @@ namespace BookApi.DTOs
         public int Id { get; set; }
         public string Title { get; set; }
         public int Year { get; set; }
-        public BookAuthor? Author { get; set; }
+        public AuthorDTO? Author { get; set; }
 
         public BookDTO() { }
         public BookDTO(Book book)
@@ -16,7 +16,7 @@ namespace BookApi.DTOs
             Id = book.Id;
             Title = book.Title;
             Year = book.Year;
-            Author = book.Author != null ? new BookAuthor(book.Author) : null;
+            Author = book.Author != null ? new AuthorDTO(book.Author) : null;
 
         }
     }

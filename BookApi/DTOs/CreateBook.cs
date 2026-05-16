@@ -1,10 +1,17 @@
-﻿namespace BookApi.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+public class CreateBook
 {
-    public class CreateBook
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public int Year { get; set; }
-        public int AuthorId { get; set; }
-    }
+    [JsonPropertyName("title")]
+    [Required]
+    [MinLength(1)]
+    public string Title { get; set; }
+
+    [JsonPropertyName("year")]
+    [Range(0, int.MaxValue)]
+    public int Year { get; set; }
+
+    [JsonPropertyName("authorId")]
+    public int AuthorId { get; set; }
 }
