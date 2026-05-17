@@ -1,11 +1,14 @@
-﻿using BookApi.Models;
+﻿using System.Text.Json.Serialization;
+using BookApi.Models;
 
 namespace BookApi.DTOs
 {
     public class AuthorDTO
     {
         public int Id { get; set; }
+        [JsonPropertyName("first_name")]
         public string FirstName { get; set; }
+        [JsonPropertyName("last_name")]
         public string LastName { get; set; }
 
         public AuthorDTO() { }

@@ -19,8 +19,12 @@ namespace BookApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDTO>>> GetBook()
+        public async Task<ActionResult<IEnumerable<BookDTO>>> GetBook([FromQuery] int? authorId)
         {
+            if (authorId.HasValue)
+            {
+                return await _context.Book.Include(b => b.Author).Where(b => b.AuthorId == authorId).Select(b => new BookDTO(b)).ToListAsync();
+            }
             return await _context.Book
                 .Include(b => b.Author)
                 .Select(b => new BookDTO(b))
@@ -28,11 +32,15 @@ namespace BookApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<BookDTO>> GetBook(int id)
+        public async Task<ActionResult<BookDTO>> GetBook(long id)
         {
+            if (id > int.MaxValue || id < int.MinValue)
+                return NotFound();
+
+            int bookId = (int)id;
             var book = await _context.Book
                 .Include(b => b.Author)
-                .Where(e => e.Id == id)
+                .Where(b => b.Id == bookId)
                 .FirstOrDefaultAsync();
 
             if (book == null)
@@ -57,12 +65,19 @@ namespace BookApi.Controllers
 
                 _context.Book.Add(book);
                 await _context.SaveChangesAsync();
+                Author author = await _context.Author.Where(a => a.Id == input.AuthorId).FirstOrDefaultAsync();
+                AuthorDTO dto = new AuthorDTO(author);
+                var bookdto = new BookDTO(book);
+                bookdto.Author = dto;
+                return CreatedAtAction("GetBook", new { id = book.Id }, new
+                {
+                    Id = book.Id,
+                    Title = input.Title,
+                    Year = input.Year,
+                    AuthorId = input.AuthorId,
+                    Author = dto
+                });
 
-                return CreatedAtAction(
-                    nameof(GetBook),
-                    new { id = book.Id },
-                    new BookDTO(book)
-                );
             } catch (Exception error)
             {
                 Console.WriteLine(error);
@@ -74,12 +89,16 @@ namespace BookApi.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(int id, CreateBook input)
+        public async Task<IActionResult> UpdateBook(long id, CreateBook input)
         {
+            if (id > int.MaxValue || id < int.MinValue)
+                return NotFound();
+
+            int bookId = (int)id;
 
             var book = new Book
             {
-                Id = id,
+                Id = bookId,
                 Title = input.Title,
                 Year = input.Year,
                 AuthorId = input.AuthorId
@@ -93,7 +112,7 @@ namespace BookApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BookExists(id))
+                if (!BookExists(bookId))
                 {
                     return NotFound();
                 }
@@ -108,9 +127,13 @@ namespace BookApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteBook(long id)
         {
-            var book = await _context.Book.FindAsync(id);
+            if (id > int.MaxValue || id < int.MinValue)
+                return NotFound();
+
+            int bookId = (int)id;
+            var book = await _context.Book.FindAsync(bookId);
             if (book == null)
             {
                 return NotFound();

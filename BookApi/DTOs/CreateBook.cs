@@ -13,5 +13,6 @@ public class CreateBook
     public int Year { get; set; }
 
     [JsonPropertyName("authorId")]
+    [Range(0, int.MaxValue)]
     public int AuthorId { get; set; }
 }

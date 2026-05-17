@@ -5,9 +5,9 @@ POST {{BookApi_HostAddress}}/books
 Content-Type: application/json
 
 {
-  "title":"Wiedzmin",
-  "year":2022,
-  "authorId": 4
+  "title":"Balladyna",
+  "year":"1839",
+  "authorId": "2"
 }
 
 ###
